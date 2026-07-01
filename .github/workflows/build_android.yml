@@ -1,0 +1,64 @@
+name: Build ijkplayer arm64-v8a
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yasm git
+
+      - name: Setup Android NDK r21e
+        uses: nttld/setup-ndk@v1
+        id: ndk
+        with:
+          ndk-version: r21e
+          add-to-path: false
+
+      - name: Set environment variables
+        run: |
+          echo "ANDROID_NDK=${{ steps.ndk.outputs.ndk-path }}" >> $GITHUB_ENV
+          echo "ANDROID_NDK_HOME=${{ steps.ndk.outputs.ndk-path }}" >> $GITHUB_ENV
+
+      - name: Init config
+        run: bash init-config.sh
+
+      - name: Init Android (fetch FFmpeg source)
+        run: bash init-android.sh
+
+      - name: Compile FFmpeg arm64-v8a
+        run: |
+          cd android/contrib
+          bash compile-ffmpeg.sh clean
+          bash compile-ffmpeg.sh arm64
+
+      - name: Compile ijkplayer arm64-v8a
+        run: |
+          cd android
+          bash compile-ijk.sh arm64
+
+      - name: Collect output .so files
+        run: |
+          mkdir -p output/arm64-v8a
+          find . -name "libijkplayer.so" -path "*/arm64-v8a/*" -exec cp {} output/arm64-v8a/ \;
+          find . -name "libijkffmpeg.so" -path "*/arm64-v8a/*" -exec cp {} output/arm64-v8a/ \;
+          find . -name "libijksdl.so"    -path "*/arm64-v8a/*" -exec cp {} output/arm64-v8a/ \;
+          echo "=== Output files ==="
+          ls -lh output/arm64-v8a/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ijkplayer-arm64-v8a
+          path: output/arm64-v8a/
+          retention-days: 7
+
