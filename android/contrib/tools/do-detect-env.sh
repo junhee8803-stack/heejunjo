@@ -22,6 +22,9 @@
 #--------------------
 set -e
 
+# Force ANDROID_NDK_ROOT to match ANDROID_NDK (CI 환경에서 NDK 충돌 방지)
+if [ -n "$ANDROID_NDK" ]; then export ANDROID_NDK_ROOT="$ANDROID_NDK"; fi
+
 UNAME_S=$(uname -s)
 UNAME_SM=$(uname -sm)
 echo "build on $UNAME_SM"
