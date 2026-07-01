@@ -38,18 +38,16 @@ jobs:
 
       - name: Compile FFmpeg arm64-v8a
         run: |
-          unset ANDROID_NDK_ROOT
-          export ANDROID_NDK="${{ steps.ndk.outputs.ndk-path }}"
+          NDK="${{ steps.ndk.outputs.ndk-path }}"
           cd android/contrib
-          bash compile-ffmpeg.sh clean
-          bash compile-ffmpeg.sh arm64
+          env -u ANDROID_NDK_ROOT ANDROID_NDK="$NDK" bash compile-ffmpeg.sh clean
+          env -u ANDROID_NDK_ROOT ANDROID_NDK="$NDK" bash compile-ffmpeg.sh arm64
 
       - name: Compile ijkplayer arm64-v8a
         run: |
-          unset ANDROID_NDK_ROOT
-          export ANDROID_NDK="${{ steps.ndk.outputs.ndk-path }}"
+          NDK="${{ steps.ndk.outputs.ndk-path }}"
           cd android
-          bash compile-ijk.sh arm64
+          env -u ANDROID_NDK_ROOT ANDROID_NDK="$NDK" bash compile-ijk.sh arm64
 
 
 
