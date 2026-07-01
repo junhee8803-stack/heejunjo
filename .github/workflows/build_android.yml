@@ -37,15 +37,24 @@ jobs:
         run: bash init-android.sh
 
       - name: Compile FFmpeg arm64-v8a
+        env:
+          ANDROID_NDK: ${{ steps.ndk.outputs.ndk-path }}
+          ANDROID_NDK_ROOT: ${{ steps.ndk.outputs.ndk-path }}
+          ANDROID_NDK_HOME: ${{ steps.ndk.outputs.ndk-path }}
         run: |
           cd android/contrib
           bash compile-ffmpeg.sh clean
           bash compile-ffmpeg.sh arm64
 
       - name: Compile ijkplayer arm64-v8a
+        env:
+          ANDROID_NDK: ${{ steps.ndk.outputs.ndk-path }}
+          ANDROID_NDK_ROOT: ${{ steps.ndk.outputs.ndk-path }}
+          ANDROID_NDK_HOME: ${{ steps.ndk.outputs.ndk-path }}
         run: |
           cd android
           bash compile-ijk.sh arm64
+
 
       - name: Collect output .so files
         run: |
