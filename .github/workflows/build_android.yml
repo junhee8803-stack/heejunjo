@@ -38,16 +38,19 @@ jobs:
 
       - name: Compile FFmpeg arm64-v8a
         run: |
-          NDK="${{ steps.ndk.outputs.ndk-path }}"
           cd android/contrib
-          env -u ANDROID_NDK_ROOT ANDROID_NDK="$NDK" bash compile-ffmpeg.sh clean
-          env -u ANDROID_NDK_ROOT ANDROID_NDK="$NDK" bash compile-ffmpeg.sh arm64
+          bash compile-ffmpeg.sh clean
+          bash compile-ffmpeg.sh arm64
+        env:
+          ANDROID_NDK: ${{ steps.ndk.outputs.ndk-path }}
 
       - name: Compile ijkplayer arm64-v8a
         run: |
-          NDK="${{ steps.ndk.outputs.ndk-path }}"
           cd android
-          env -u ANDROID_NDK_ROOT ANDROID_NDK="$NDK" bash compile-ijk.sh arm64
+          bash compile-ijk.sh arm64
+        env:
+          ANDROID_NDK: ${{ steps.ndk.outputs.ndk-path }}
+
 
 
 
