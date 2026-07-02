@@ -177,7 +177,9 @@ static int recreate_format_l(JNIEnv *env, IJKFF_Pipenode *node)
 
     ALOGI("AMediaFormat: %s, %dx%d\n", opaque->mcc.mime_type, opaque->codecpar->width, opaque->codecpar->height);
     SDL_AMediaFormat_deleteP(&opaque->output_aformat);
-    opaque->input_aformat = SDL_AMediaFormatJava_createVideoFormat(env, opaque->mcc.mime_type, opaque->codecpar->width, opaque->codecpar->height);
+opaque->input_aformat = SDL_AMediaFormatJava_createVideoFormat(env, opaque->mcc.mime_type,
+    opaque->codecpar->width > 0 ? opaque->codecpar->width : 1920,
+    opaque->codecpar->height > 0 ? opaque->codecpar->height : 1080);
     if (opaque->codecpar->extradata && opaque->codecpar->extradata_size > 0) {
         if ((opaque->codecpar->codec_id == AV_CODEC_ID_H264 && opaque->codecpar->extradata[0] == 1)
             || (opaque->codecpar->codec_id == AV_CODEC_ID_HEVC && opaque->codecpar->extradata_size > 3
@@ -1762,7 +1764,8 @@ int ffpipenode_config_from_android_mediacodec(FFPlayer *ffp, IJKFF_Pipeline *pip
         strcpy(opaque->mcc.mime_type, SDL_AMIME_VIDEO_AVC);
         opaque->mcc.profile = (opaque->codecpar->profile == FF_PROFILE_UNKNOWN)
             ? FF_PROFILE_H264_BASELINE : opaque->codecpar->profile;
-        opaque->mcc.level   = opaque->codecpar->level;
+        opaque->mcc.level = (opaque->codecpar->level <= 0) ? 41 : opaque->codecpar->level;
+
         break;
     case AV_CODEC_ID_HEVC:
         if (!ffp->mediacodec_hevc && !ffp->mediacodec_all_videos) {
@@ -2000,7 +2003,7 @@ IJKFF_Pipenode *ffpipenode_create_video_decoder_from_android_mediacodec(FFPlayer
         strcpy(opaque->mcc.mime_type, SDL_AMIME_VIDEO_AVC);
         opaque->mcc.profile = (opaque->codecpar->profile == FF_PROFILE_UNKNOWN)
             ? FF_PROFILE_H264_BASELINE : opaque->codecpar->profile;
-        opaque->mcc.level   = opaque->codecpar->level;
+        opaque->mcc.level = (opaque->codecpar->level <= 0) ? 41 : opaque->codecpar->level;
         break;
     case AV_CODEC_ID_HEVC:
         if (!ffp->mediacodec_hevc && !ffp->mediacodec_all_videos) {
