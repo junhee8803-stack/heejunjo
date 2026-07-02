@@ -1752,6 +1752,9 @@ int ffpipenode_config_from_android_mediacodec(FFPlayer *ffp, IJKFF_Pipeline *pip
             case FF_PROFILE_H264_CAVLC_444:
                 ALOGW("%s: MediaCodec: H264_CAVLC_444: disabled\n", __func__);
                 goto fail;
+            case FF_PROFILE_UNKNOWN:
+                ALOGI("%s: MediaCodec: H264_UNKNOWN_PROFILE: enabled\n", __func__);
+                break;
             default:
                 ALOGW("%s: MediaCodec: (%d) unknown profile: disabled\n", __func__, opaque->codecpar->profile);
                 goto fail;
@@ -1986,6 +1989,9 @@ IJKFF_Pipenode *ffpipenode_create_video_decoder_from_android_mediacodec(FFPlayer
             case FF_PROFILE_H264_CAVLC_444:
                 ALOGW("%s: MediaCodec: H264_CAVLC_444: disabled\n", __func__);
                 goto fail;
+            case FF_PROFILE_UNKNOWN:
+                ALOGI("%s: MediaCodec: H264_UNKNOWN_PROFILE: enabled\n", __func__);
+                break;
             default:
                 ALOGW("%s: MediaCodec: (%d) unknown profile: disabled\n", __func__, opaque->codecpar->profile);
                 goto fail;
