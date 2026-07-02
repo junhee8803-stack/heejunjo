@@ -1128,6 +1128,10 @@ static int drain_output_buffer_l(JNIEnv *env, IJKFF_Pipenode *node, int64_t time
             // ffp_notify_msg3(ffp, FFP_MSG_VIDEO_SIZE_CHANGED, width, height);
             // opaque->frame_width  = width;
             // opaque->frame_height = height;
+            if (width > 0 && height > 0) {
+                    opaque->frame_width  = width;
+                    opaque->frame_height = height;
+                }
             ALOGI(
                 "AMEDIACODEC__INFO_OUTPUT_FORMAT_CHANGED\n"
                 "    width-height: (%d x %d)\n"
@@ -1301,6 +1305,10 @@ static int drain_output_buffer2_l(JNIEnv *env, IJKFF_Pipenode *node, int64_t tim
             // ffp_notify_msg3(ffp, FFP_MSG_VIDEO_SIZE_CHANGED, width, height);
             // opaque->frame_width  = width;
             // opaque->frame_height = height;
+                        if (width > 0 && height > 0) {
+                    opaque->frame_width  = width;
+                    opaque->frame_height = height;
+                }
             ALOGI(
                 "AMEDIACODEC__INFO_OUTPUT_FORMAT_CHANGED\n"
                 "    width-height: (%d x %d)\n"
