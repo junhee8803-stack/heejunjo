@@ -17,18 +17,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y yasm git
 
-      - name: Setup Android NDK r21e
+      - name: Setup Android NDK r14b
         uses: nttld/setup-ndk@v1
         id: ndk
         with:
           ndk-version: r14b
           add-to-path: false
-
-      - name: Set environment variables
-        run: |
-          echo "ANDROID_NDK=${{ steps.ndk.outputs.ndk-path }}" >> $GITHUB_ENV
-          echo "ANDROID_NDK_HOME=${{ steps.ndk.outputs.ndk-path }}" >> $GITHUB_ENV
-          echo "ANDROID_NDK_ROOT=${{ steps.ndk.outputs.ndk-path }}" >> $GITHUB_ENV
 
       - name: Init config
         run: bash init-config.sh
@@ -37,22 +31,19 @@ jobs:
         run: bash init-android.sh
 
       - name: Compile FFmpeg arm64-v8a
+        env:
+          ANDROID_NDK: ${{ steps.ndk.outputs.ndk-path }}
         run: |
           cd android/contrib
           bash compile-ffmpeg.sh clean
           bash compile-ffmpeg.sh arm64
-        env:
-          ANDROID_NDK: ${{ steps.ndk.outputs.ndk-path }}
 
       - name: Compile ijkplayer arm64-v8a
+        env:
+          ANDROID_NDK: ${{ steps.ndk.outputs.ndk-path }}
         run: |
           cd android
           bash compile-ijk.sh arm64
-        env:
-          ANDROID_NDK: ${{ steps.ndk.outputs.ndk-path }}
-
-
-
 
       - name: Collect output .so files
         run: |
@@ -69,4 +60,3 @@ jobs:
           name: ijkplayer-arm64-v8a
           path: output/arm64-v8a/
           retention-days: 7
-
