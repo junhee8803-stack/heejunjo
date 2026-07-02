@@ -1760,7 +1760,8 @@ int ffpipenode_config_from_android_mediacodec(FFPlayer *ffp, IJKFF_Pipeline *pip
                 goto fail;
         }
         strcpy(opaque->mcc.mime_type, SDL_AMIME_VIDEO_AVC);
-        opaque->mcc.profile = opaque->codecpar->profile;
+        opaque->mcc.profile = (opaque->codecpar->profile == FF_PROFILE_UNKNOWN)
+            ? FF_PROFILE_H264_BASELINE : opaque->codecpar->profile;
         opaque->mcc.level   = opaque->codecpar->level;
         break;
     case AV_CODEC_ID_HEVC:
@@ -1997,7 +1998,8 @@ IJKFF_Pipenode *ffpipenode_create_video_decoder_from_android_mediacodec(FFPlayer
                 goto fail;
         }
         strcpy(opaque->mcc.mime_type, SDL_AMIME_VIDEO_AVC);
-        opaque->mcc.profile = opaque->codecpar->profile;
+        opaque->mcc.profile = (opaque->codecpar->profile == FF_PROFILE_UNKNOWN)
+            ? FF_PROFILE_H264_BASELINE : opaque->codecpar->profile;
         opaque->mcc.level   = opaque->codecpar->level;
         break;
     case AV_CODEC_ID_HEVC:
